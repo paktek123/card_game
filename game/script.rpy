@@ -23,10 +23,20 @@ init python:
         def __repr__(self):
             return '<Letter>: {}'.format(alphabet)
             
+    class Slot:
+        def __init__(self, expected_letter, given_letter=None):
+            self.expected_letter = expected_letter
+            self.given_letter = given_letter
+            
+        def __repr__(self):
+            return '<Slot>: {} {}'.format(self.expected_letter, self.given_letter)
+        
+            
     class ArabicWord:
         def __init__(self, pic, letters=[]):
             self.pic = pic
             self.letters = letters
+            self.slots = [Slot(letter) for letter in self.letters]
             
         def __repr__(self):
             return '<ArabicWord>: {}'.format(letters.join(' '))
@@ -80,7 +90,7 @@ screen field(word):
             
         $ enemy_counter += 1
         
-    for s in range(0, len(word.letters)):
+    for s, slot in enumerate(word.slots):
         add "slot" xpos (enemy_start_x + (enemy_delta_x*s)) ypos 0.5
     
     for s in [player.slot1, player.slot2, player.slot3, player.slot4, player.slot5]:
@@ -131,7 +141,7 @@ label main_loop:
     
 label draw_card:
     
-    "I draw a card"
+    #"I draw a card"
     $ player.draw_card(ALL_CARDS)
     
     jump main_loop
